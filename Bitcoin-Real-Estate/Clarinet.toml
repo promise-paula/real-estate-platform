@@ -1,0 +1,51 @@
+[project]
+name = 'Bitcoin-Real-Estate'
+description = 'Property tokenization platform with multi-sig governance'
+authors = []
+telemetry = true
+cache_dir = './.cache'
+
+# sBTC Token Requirements
+[[project.requirements]]
+contract_id = 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token'
+
+# Core Contracts - No Dependencies
+[contracts.data-store-v3]
+path = 'contracts/data-store-v3.clar'
+clarity_version = 3
+epoch = 3.1
+
+[contracts.governance-v3]
+path = 'contracts/governance-v3.clar'
+clarity_version = 3
+epoch = 3.1
+
+# Registry - Depends on data-store and governance
+[contracts.property-registry-v3]
+path = 'contracts/property-registry-v3.clar'
+clarity_version = 3
+epoch = 3.1
+depends_on = ['data-store-v3', 'governance-v3']
+
+# Investment Manager - Depends on data-store, governance, and registry
+[contracts.investment-manager-v3]
+path = 'contracts/investment-manager-v3.clar'
+clarity_version = 3
+epoch = 3.1
+depends_on = ['data-store-v3', 'governance-v3', 'property-registry-v3']
+
+# Rental Distributor - Depends on all other contracts
+[contracts.rental-distributor-v3]
+path = 'contracts/rental-distributor-v3.clar'
+clarity_version = 3
+epoch = 3.1
+depends_on = ['data-store-v3', 'governance-v3', 'property-registry-v3', 'investment-manager-v3']
+
+[repl.analysis]
+passes = ['check_checker']
+
+[repl.analysis.check_checker]
+strict = false
+trusted_sender = false
+trusted_caller = false
+callee_filter = false
